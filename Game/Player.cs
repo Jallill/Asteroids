@@ -16,10 +16,13 @@ namespace TestEngine {
         public List<Bullet> bulletsShot { get; private set; }
         public Texture currentT { get; private set; }
         public Texture tIdle { get; private set; }
+        public float pivotX { get; private set; }
+        public float pivotY { get; private set; }
 
         private float dirx;
         private float diry;
-        private float timeBeetweenBullets = 0.1f;
+        private int maxBullets = 4;
+        private float timeBetweenShot = 0.5f;
         private float waitUntilNextBullet = 0;
         private float rotationSpeed = 200;
         private float acceleration = 0;
@@ -29,11 +32,16 @@ namespace TestEngine {
         public Player(float x = 0, float y = 0) {
             this.x = x;
             this.y = y;
-            this.angle = 0;
+            angle = 0;
+
             dirx = (float)Math.Cos((angle) * Math.PI / 180);
             diry = (float)Math.Sin((angle) * Math.PI / 180);
+
             bulletsShot = new List<Bullet>();
             animationLoad();
+
+            pivotX = width / 2;
+            pivotY = height / 2;
         }
 
         private void animationLoad() 
@@ -70,39 +78,41 @@ namespace TestEngine {
             if (Game.GetKey(Keys.SPACE)) {
                 if (waitUntilNextBullet <= 0) {
                     shootBullet();
-                    waitUntilNextBullet = timeBeetweenBullets;
+                    waitUntilNextBullet = timeBetweenShot;
                 } else {
                     waitUntilNextBullet -= deltaTime;
                 }
                 
             }
 
+            Console.WriteLine("Angle:(" + angle + ") x:(" + x + ") y:(" + y + ") cosAngle:(" + Math.Cos(angle) + ") sinAngle(" + Math.Sin(angle) + ")" + ") acceleration(" + acceleration + ")");
+
+        }
+
+        public void update(float deltaTime) {
+
+            if (x > 800 + height) {
+                x = -height;
+            }
+            if (x < -height) {
+                x = 800 + height;
+            }
+            if (y > 600 + height) {
+                y = -height;
+            }
+            if (y < -height) {
+                y = 600 + height;
+            }
+
+
             bulletsShot.RemoveAll(bullet => bullet.bulletDisapear == true);
-            
+
             if (acceleration > 0) {
                 x += speed * dirx * acceleration * deltaTime;
                 y += speed * diry * acceleration * deltaTime;
             }
 
-            
-            Console.WriteLine("Angle:(" + angle + ") x:(" + x + ") y:(" + y + ") cosAngle:(" + Math.Cos(angle) + ") sinAngle(" + Math.Sin(angle) + ")" + ") acceleration(" + acceleration + ")");
 
-        }
-
-        public void update(float Tiempo) {
-
-            if (x > 800 + width) {
-                x = 0;
-            }
-            if (x < -height) {
-                x = 800;
-            }
-            if (y > 600 + height) {
-                y = 0;
-            }
-            if (y < -height) {
-                y = 600;
-            }
         }
 
         public void checkDeath() {
@@ -115,8 +125,8 @@ namespace TestEngine {
         }
 
         private void shootBullet() {
-            if (bulletsShot.Count < 3) {
-                Bullet bullet = new Bullet(this.x, this.y, angle);
+            if (bulletsShot.Count < maxBullets) {
+                Bullet bullet = new Bullet(this.x, this.y, angle, pivotX, pivotY);
                 bulletsShot.Add(bullet);
             }
         }

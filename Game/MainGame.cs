@@ -18,8 +18,8 @@ namespace TestEngine {
             player.inputKey(deltaTime);
         }
 
-        public void update(float currentTime, float deltaTime) {
-            player.update(currentTime);
+        public void update(float deltaTime) {
+            player.update(deltaTime);
             foreach(Bullet bullet in player.bulletsShot) {
                 bullet.update(deltaTime);
             }
@@ -29,9 +29,9 @@ namespace TestEngine {
 
         public void render() {
             Game.Clear(0, 0, 0);
-            Game.Draw(player.currentT, player.x, player.y,1,1,player.angle,player.width/2,player.height/2);
+            Game.Draw(player.currentT, player.x, player.y,1,1,player.angle,player.pivotX,player.pivotY);
             foreach(Bullet bullet in player.bulletsShot) {
-                Game.Draw(bullet.currentT, bullet.x, bullet.y, 1, 1, 0, bullet.width / 2, bullet.height / 2);
+                Game.Draw(bullet.currentT, bullet.x, bullet.y, 1, 1, 0, bullet.pivotX, bullet.pivotY);
             }
         }
 

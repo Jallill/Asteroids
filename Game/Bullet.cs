@@ -10,21 +10,35 @@ namespace TestEngine {
         public float x { get; private set;}
         public float y { get; private set; }
         public float tragectoryAngle { get; private set; }
-        public int height;
-        public int width;
+        public int height { get; private set; }
+        public int width { get; private set; }
+        public float pivotX { get; private set; }
+        public float pivotY { get; private set; }
         public bool bulletDisapear { get; private set; }
         public Texture currentT { get; private set; }
+
+        private float dirx;
+        private float diry;
         private Texture tIdle;
         private float speed = 300;
         private float travelDistance = 1000;
         
 
-        public Bullet(float x, float y, float tragectoryAngle) {
-            this.x = x;
-            this.y = y;
+        public Bullet(float x, float y, float tragectoryAngle, float xOffSet, float yOffSet) {
             this.tragectoryAngle = tragectoryAngle;
-            this.bulletDisapear = false;
+
+            dirx = (float)Math.Cos((tragectoryAngle) * Math.PI / 180);
+            diry = (float)Math.Sin((tragectoryAngle) * Math.PI / 180);
+
+            this.x = x + dirx * xOffSet;
+            this.y = y + diry * xOffSet;
+
+            bulletDisapear = false;
+            
             loadAnimation();
+
+            pivotX = width / 2;
+            pivotY = height / 2;
         }
 
         public void loadAnimation() {
@@ -34,8 +48,6 @@ namespace TestEngine {
             width = tIdle.Width;
         }
         public void update(float deltaTime) {
-            float dirx = (float)Math.Cos((tragectoryAngle) * Math.PI / 180);
-            float diry = (float)Math.Sin((tragectoryAngle) * Math.PI / 180);
 
             this.travelDistance -= (float)Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2)) * deltaTime;
 
@@ -59,6 +71,6 @@ namespace TestEngine {
                 y = 600;
             }
 
-        }
+        } 
     }
 }

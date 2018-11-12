@@ -62,7 +62,7 @@ namespace TestEngine {
         static void update() {
             switch (state) {
                 case (States.MainGame):
-                    mainGame.update(GetCurrentTime(), deltaTime);
+                    mainGame.update(deltaTime);
                     break;
             }
 
