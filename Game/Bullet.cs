@@ -9,44 +9,44 @@ namespace TestEngine {
 
         public float x { get; private set;}
         public float y { get; private set; }
+        public float r { get; private set; }
         public float tragectoryAngle { get; private set; }
-        public int height { get; private set; }
-        public int width { get; private set; }
+        //public int height { get; private set; }
+        //public int width { get; private set; }
         public float pivotX { get; private set; }
         public float pivotY { get; private set; }
         public bool bulletDisapear { get; private set; }
         public Texture currentT { get; private set; }
 
-        private float dirx;
-        private float diry;
+        private float dirX;
+        private float dirY;
         private Texture tIdle;
         private float speed = 300;
         private float travelDistance = 1000;
         
 
-        public Bullet(float x, float y, float tragectoryAngle, float xOffSet, float yOffSet) {
+        public Bullet(float x, float y, float tragectoryAngle, float xOffSet, float yOffSet, float r) {
             this.tragectoryAngle = tragectoryAngle;
 
-            dirx = (float)Math.Cos((tragectoryAngle) * Math.PI / 180);
-            diry = (float)Math.Sin((tragectoryAngle) * Math.PI / 180);
+            dirX = (float)Math.Cos((tragectoryAngle) * Math.PI / 180);
+            dirY = (float)Math.Sin((tragectoryAngle) * Math.PI / 180);
 
-            this.x = x + dirx * xOffSet;
-            this.y = y + diry * xOffSet;
-
+            this.x = x + dirX * xOffSet;
+            this.y = y + dirY * xOffSet;
+            this.r = r;
             bulletDisapear = false;
             
             loadAnimation();
 
-            pivotX = width / 2;
-            pivotY = height / 2;
+            pivotX = r / 2;
+            pivotY = r / 2;
         }
 
         public void loadAnimation() {
             tIdle = Game.GetTexture("Texturas/Bullet.png");
             currentT = tIdle;
-            height = tIdle.Height;
-            width = tIdle.Width;
         }
+
         public void update(float deltaTime) {
 
             this.travelDistance -= (float)Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2)) * deltaTime;
@@ -54,20 +54,20 @@ namespace TestEngine {
             if (travelDistance <= 0) {
                 bulletDisapear = true;
             } else {
-                x += speed * dirx * deltaTime;
-                y += speed * diry * deltaTime;
+                x += speed * dirX * deltaTime;
+                y += speed * dirY * deltaTime;
             }
 
-            if (x > 800 + width) {
+            if (x > 800 + r) {
                 x = 0;
             }
-            if (x < -height) {
+            if (x < -r) {
                 x = 800;
             }
-            if (y > 600 + height) {
+            if (y > 600 + r) {
                 y = 0;
             }
-            if (y < -height) {
+            if (y < -r) {
                 y = 600;
             }
 

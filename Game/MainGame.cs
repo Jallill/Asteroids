@@ -8,7 +8,11 @@ namespace TestEngine {
     class MainGame {
 
         Player player;
-        Random random = new Random();
+        List<Asteroid> asteroids;
+        int level;
+
+        Random random = new Random((int)DateTime.Now.Ticks);
+
 
         public MainGame() {
             restart();
@@ -23,6 +27,9 @@ namespace TestEngine {
             foreach(Bullet bullet in player.bulletsShot) {
                 bullet.update(deltaTime);
             }
+            foreach(Asteroid asteroid in asteroids) {
+                asteroid.update(deltaTime);
+            }
             player.checkDeath();
 
         }
@@ -33,10 +40,26 @@ namespace TestEngine {
             foreach(Bullet bullet in player.bulletsShot) {
                 Game.Draw(bullet.currentT, bullet.x, bullet.y, 1, 1, 0, bullet.pivotX, bullet.pivotY);
             }
+            foreach(Asteroid asteroid in asteroids) {
+                Game.Draw(asteroid.currentT, asteroid.x, asteroid.y, 1, 1, asteroid.angle, asteroid.pivotX, asteroid.pivotY);
+            }
         }
 
         void restart() {
             player = new Player(400, 300);
+            asteroids = new List<Asteroid>();
+            level = 1;
+            spawnAsteroids(level);
+        }
+
+        void spawnAsteroids(int level) {
+            for (int i = 0; i < level; i++) {
+                float x = random.Next(0, 800);
+                float y = random.Next(0, 600);
+                float angle = random.Next(0, 360);
+                asteroids.Add(new Asteroid(x,y,angle,64));
+                
+            }
         }
     }
 }

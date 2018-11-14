@@ -19,8 +19,10 @@ namespace TestEngine {
         public float pivotX { get; private set; }
         public float pivotY { get; private set; }
 
-        private float dirx;
-        private float diry;
+        private bool rotate = true;
+        private Direction rotateDirection = Direction.None;
+        private float dirX;
+        private float dirY;
         private int maxBullets = 4;
         private float timeBetweenShot = 0.5f;
         private float waitUntilNextBullet = 0;
@@ -29,13 +31,12 @@ namespace TestEngine {
         private float accelerationPower = 1;
         private float speed = 200;
 
+        enum Direction { Left = -1, None = 0, Right = 1}
+
         public Player(float x = 0, float y = 0) {
             this.x = x;
             this.y = y;
             angle = 0;
-
-            dirx = (float)Math.Cos((angle) * Math.PI / 180);
-            diry = (float)Math.Sin((angle) * Math.PI / 180);
 
             bulletsShot = new List<Bullet>();
             animationLoad();
@@ -56,15 +57,20 @@ namespace TestEngine {
         {
 
             if (Game.GetKey(Keys.D)) {
-                angle += rotationSpeed * deltaTime;
-                dirx = (float)Math.Cos((angle) * Math.PI / 180);
-                diry = (float)Math.Sin((angle) * Math.PI / 180);
+                rotateDirection = Direction.Right;
+                rotate = true;
             }
 
             if (Game.GetKey(Keys.A)) {
-                angle -= rotationSpeed * deltaTime;
-                dirx = (float)Math.Cos((angle) * Math.PI / 180);
-                diry = (float)Math.Sin((angle) * Math.PI / 180);
+                rotateDirection = Direction.Left;
+                rotate = true;
+            }
+
+            if (rotate) {
+                angle += rotationSpeed * deltaTime * (float)rotateDirection;
+                dirX = (float)Math.Cos((angle) * Math.PI / 180);
+                dirY = (float)Math.Sin((angle) * Math.PI / 180);
+                rotate = false;
             }
 
             if (Game.GetKey(Keys.W)) {
@@ -108,8 +114,8 @@ namespace TestEngine {
             bulletsShot.RemoveAll(bullet => bullet.bulletDisapear == true);
 
             if (acceleration > 0) {
-                x += speed * dirx * acceleration * deltaTime;
-                y += speed * diry * acceleration * deltaTime;
+                x += speed * dirX * acceleration * deltaTime;
+                y += speed * dirY * acceleration * deltaTime;
             }
 
 
@@ -126,7 +132,7 @@ namespace TestEngine {
 
         private void shootBullet() {
             if (bulletsShot.Count < maxBullets) {
-                Bullet bullet = new Bullet(this.x, this.y, angle, pivotX, pivotY);
+                Bullet bullet = new Bullet(this.x, this.y, angle, pivotX, pivotY, 10);
                 bulletsShot.Add(bullet);
             }
         }
