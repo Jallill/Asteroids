@@ -29,8 +29,12 @@ namespace TestEngine {
             }
             foreach(Asteroid asteroid in asteroids) {
                 asteroid.update(deltaTime);
+                if (player.bulletsShot.Count > 0) {
+                    asteroid.checkCollision(player.bulletsShot);
+                }
             }
-            player.checkDeath();
+            asteroids.RemoveAll(bullet => bullet.destroyAsteroid == true);
+            
 
         }
 

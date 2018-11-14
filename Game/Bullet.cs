@@ -15,8 +15,9 @@ namespace TestEngine {
         //public int width { get; private set; }
         public float pivotX { get; private set; }
         public float pivotY { get; private set; }
-        public bool bulletDisapear { get; private set; }
         public Texture currentT { get; private set; }
+
+        public bool bulletDisapear;
 
         private float dirX;
         private float dirY;

@@ -12,6 +12,7 @@ namespace TestEngine {
         public float r { get; private set; }
         public float pivotX { get; private set; }
         public float pivotY { get; private set; }
+        public bool destroyAsteroid { get; private set; }
         public Texture tIdle { get; private set; }
         public Texture currentT { get; private set; }
 
@@ -19,9 +20,9 @@ namespace TestEngine {
         private float speed = 200;
         private float dirX;
         private float dirY;
-        
 
-        public Asteroid(float x, float y,float angle, float r) {
+
+        public Asteroid(float x, float y, float angle, float r) {
             this.x = x;
             this.y = y;
             this.angle = angle;
@@ -30,6 +31,7 @@ namespace TestEngine {
             this.r = r;
             pivotX = r / 2;
             pivotY = r / 2;
+            destroyAsteroid = false;
             loadAnimation();
         }
 
@@ -56,6 +58,22 @@ namespace TestEngine {
             if (y < -r) {
                 y = 600;
             }
+        }
+
+        public void checkCollision(List<Bullet> bullets) {
+            foreach (Bullet bullet in bullets) {
+                var radius = this.r + bullet.r;
+                var deltaX = this.x - bullet.x;
+                var deltaY = this.y - bullet.y;
+                if (Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2) <= Math.Pow(radius, 2)) {
+                    destroyAsteroid = true;
+                    bullet.bulletDisapear = true;
+                }
+            }
+        }
+
+        public bool checkCollision(Player player) {
+            return true;
         }
 
     }
