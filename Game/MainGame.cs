@@ -9,8 +9,8 @@ namespace TestEngine {
 
         Player player;
         List<Asteroid> asteroids;
-        int level;
-
+        int gameLevel;
+        List<Asteroid> spawnedAsteroids;
         Random random = new Random((int)DateTime.Now.Ticks);
 
 
@@ -24,16 +24,35 @@ namespace TestEngine {
 
         public void update(float deltaTime) {
             player.update(deltaTime);
-            foreach(Bullet bullet in player.bulletsShot) {
+
+            foreach (Bullet bullet in player.bulletsShot) {
                 bullet.update(deltaTime);
             }
+
+            spawnedAsteroids = new List<Asteroid>();
+
             foreach(Asteroid asteroid in asteroids) {
                 asteroid.update(deltaTime);
+
                 if (player.bulletsShot.Count > 0) {
                     asteroid.checkCollision(player.bulletsShot);
                 }
+
+                if (asteroid.destroyAsteroid == true) {
+                    switch (asteroid.level) {
+                        case (1):
+                            spawnAsteroids(2, 2, asteroid.x, asteroid.y);
+                            break;
+                        case (2):
+                            spawnAsteroids(2, 3, asteroid.x, asteroid.y);
+                            break;
+                    }
+                }
             }
-            asteroids.RemoveAll(bullet => bullet.destroyAsteroid == true);
+
+            if (spawnedAsteroids.Count > 0) asteroids.AddRange(spawnedAsteroids);
+
+            asteroids.RemoveAll(asteroid => asteroid.destroyAsteroid == true);
             
 
         }
@@ -45,25 +64,32 @@ namespace TestEngine {
                 Game.Draw(bullet.currentT, bullet.x, bullet.y, 1, 1, 0, bullet.pivotX, bullet.pivotY);
             }
             foreach(Asteroid asteroid in asteroids) {
-                Game.Draw(asteroid.currentT, asteroid.x, asteroid.y, 1, 1, asteroid.angle, asteroid.pivotX, asteroid.pivotY);
+                Game.Draw(asteroid.currentT, asteroid.x, asteroid.y, asteroid.scale, asteroid.scale, asteroid.rotationAngle, asteroid.pivotX, asteroid.pivotY);
             }
         }
 
         void restart() {
             player = new Player(400, 300);
             asteroids = new List<Asteroid>();
-            level = 1;
-            spawnAsteroids(level);
+            gameLevel = 1;
+            setUpAsteroids(gameLevel);
         }
 
-        void spawnAsteroids(int level) {
-            for (int i = 0; i < level; i++) {
-                float x = random.Next(0, 800);
-                float y = random.Next(0, 600);
+        void spawnAsteroids(int quant, int level, float x = 0, float y = 0) {
+            for (int i = 0; i < quant; i++) {
+                if(x == 0 && y == 0) {
+                    x = random.Next(0, 800);
+                    y = random.Next(0, 600);
+                }
                 float angle = random.Next(0, 360);
-                asteroids.Add(new Asteroid(x,y,angle,64));
-                
+                spawnedAsteroids.Add(new Asteroid(x, y, angle, level));
             }
+        }
+
+        void setUpAsteroids(int gameLevel) {
+            spawnedAsteroids = new List<Asteroid>();
+            spawnAsteroids(gameLevel + 1, 1);
+            asteroids.AddRange(spawnedAsteroids);
         }
     }
 }

@@ -85,12 +85,10 @@ namespace TestEngine {
                 if (waitUntilNextBullet <= 0) {
                     shootBullet();
                     waitUntilNextBullet = timeBetweenShot;
-                } else {
-                    waitUntilNextBullet -= deltaTime;
                 }
                 
             }
-
+            waitUntilNextBullet -= deltaTime;
             Console.WriteLine("Angle:(" + angle + ") x:(" + x + ") y:(" + y + ") cosAngle:(" + Math.Cos(angle) + ") sinAngle(" + Math.Sin(angle) + ")" + ") acceleration(" + acceleration + ")");
 
         }

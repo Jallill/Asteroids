@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace TestEngine {
     class Asteroid {
+
         public float x { get; private set; }
         public float y { get; private set; }
         public float angle { get; private set; }
@@ -15,6 +16,9 @@ namespace TestEngine {
         public bool destroyAsteroid { get; private set; }
         public Texture tIdle { get; private set; }
         public Texture currentT { get; private set; }
+        public int level { get; private set; }
+        public float rotationAngle { get; private set; }
+        public float scale { get; private set; }
 
         private float rotationSpeed = 100;
         private float speed = 200;
@@ -22,29 +26,58 @@ namespace TestEngine {
         private float dirY;
 
 
-        public Asteroid(float x, float y, float angle, float r) {
+        public Asteroid(float x, float y, float angle, int level) {
+
             this.x = x;
             this.y = y;
             this.angle = angle;
+            this.r = r;
+            this.level = level;
+
             dirX = (float)Math.Cos((angle) * Math.PI / 180);
             dirY = (float)Math.Sin((angle) * Math.PI / 180);
-            this.r = r;
+            
+            destroyAsteroid = false;
+            rotationAngle = 0;
+
+            loadAnimation();
+
+            scaleByLevel();
+
             pivotX = r / 2;
             pivotY = r / 2;
-            destroyAsteroid = false;
-            loadAnimation();
         }
 
-        public void loadAnimation() {
+        void loadAnimation() {
             tIdle = Game.GetTexture("Texturas/Asteroid.png");
             currentT = tIdle;
+        }
+
+        void scaleByLevel() {
+            switch (level) {
+                case (1):
+                    r = 64;
+                    scale = 1;
+                    break;
+
+                case (2):
+                    r = 32;
+                    scale = 0.5f;
+                    break;
+
+                case (3):
+                    r = 16;
+                    scale = 0.25f;
+                    break;
+
+            }
         }
 
         public void update(float deltaTime) {
             x += speed * dirX * deltaTime;
             y += speed * dirY * deltaTime;
 
-            angle += rotationSpeed * deltaTime;
+            rotationAngle += rotationSpeed * deltaTime;
 
             if (x > 800 + r) {
                 x = 0;
