@@ -18,6 +18,8 @@ namespace TestEngine {
         public Texture tIdle { get; private set; }
         public float pivotX { get; private set; }
         public float pivotY { get; private set; }
+        public bool dead = false;
+        enum Direction { Left = -1, None = 0, Right = 1}
 
         private bool rotate = true;
         private Direction rotateDirection = Direction.None;
@@ -30,8 +32,6 @@ namespace TestEngine {
         private float acceleration = 0;
         private float accelerationPower = 1;
         private float speed = 200;
-
-        enum Direction { Left = -1, None = 0, Right = 1}
 
         public Player(float x = 0, float y = 0) {
             this.x = x;

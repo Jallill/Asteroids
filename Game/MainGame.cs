@@ -34,6 +34,8 @@ namespace TestEngine {
             foreach(Asteroid asteroid in asteroids) {
                 asteroid.update(deltaTime);
 
+                asteroid.checkCollision(player);
+
                 if (player.bulletsShot.Count > 0) {
                     asteroid.checkCollision(player.bulletsShot);
                 }
@@ -64,8 +66,10 @@ namespace TestEngine {
                 Game.Draw(bullet.currentT, bullet.x, bullet.y, 1, 1, 0, bullet.pivotX, bullet.pivotY);
             }
             foreach(Asteroid asteroid in asteroids) {
-                Game.Draw(asteroid.currentT, asteroid.x, asteroid.y, asteroid.scale, asteroid.scale, asteroid.rotationAngle, asteroid.pivotX, asteroid.pivotY);
+                Game.Draw(asteroid.currentT, asteroid.x, asteroid.y, asteroid.scale, asteroid.scale, asteroid.rotationAngle, asteroid.r, asteroid.r);
             }
+
+
         }
 
         void restart() {
@@ -90,6 +94,16 @@ namespace TestEngine {
             spawnedAsteroids = new List<Asteroid>();
             spawnAsteroids(gameLevel + 1, 1);
             asteroids.AddRange(spawnedAsteroids);
+        }
+
+        void drawCricleCollider(float x, float y, float r) {
+            float drawX;
+            float drawY;
+            for (float i = 0; i <= 360; i++) {
+                drawX = (float)Math.Cos((i) * Math.PI / 180) * r;
+                drawY = (float)Math.Sin((i) * Math.PI / 180) * r;
+                Game.Draw("pixel.png", x + drawX, y + drawY);
+            }
         }
     }
 }

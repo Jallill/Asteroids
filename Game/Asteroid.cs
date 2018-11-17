@@ -11,8 +11,6 @@ namespace TestEngine {
         public float y { get; private set; }
         public float angle { get; private set; }
         public float r { get; private set; }
-        public float pivotX { get; private set; }
-        public float pivotY { get; private set; }
         public bool destroyAsteroid { get; private set; }
         public Texture tIdle { get; private set; }
         public Texture currentT { get; private set; }
@@ -43,9 +41,6 @@ namespace TestEngine {
             loadAnimation();
 
             scaleByLevel();
-
-            pivotX = r / 2;
-            pivotY = r / 2;
         }
 
         void loadAnimation() {
@@ -56,17 +51,17 @@ namespace TestEngine {
         void scaleByLevel() {
             switch (level) {
                 case (1):
-                    r = 64;
+                    r = 32;
                     scale = 1;
                     break;
 
                 case (2):
-                    r = 32;
+                    r = 16;
                     scale = 0.5f;
                     break;
 
                 case (3):
-                    r = 16;
+                    r = 8;
                     scale = 0.25f;
                     break;
 
@@ -105,8 +100,12 @@ namespace TestEngine {
             }
         }
 
-        public bool checkCollision(Player player) {
-            return true;
+        public void checkCollision(Player player) {
+            float delatX = x - Math.Max(player.x, Math.Min(x, player.x + player.width));
+            float delatY = y - Math.Max(player.y, Math.Min(y, player.y + player.height));
+            if (Math.Pow(delatX, 2) + Math.Pow(delatY, 2) < Math.Pow(r,2)) {
+                Console.Write("Death");
+            }
         }
 
     }

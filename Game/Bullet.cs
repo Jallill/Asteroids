@@ -33,7 +33,7 @@ namespace TestEngine {
             dirY = (float)Math.Sin((tragectoryAngle) * Math.PI / 180);
 
             this.x = x + dirX * xOffSet;
-            this.y = y + dirY * xOffSet;
+            this.y = y + dirY * yOffSet;
             this.r = r;
             bulletDisapear = false;
             
