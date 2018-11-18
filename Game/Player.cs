@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TestEngine {
      class Player {
 
-        public float life = 3;
+        public float lives;
         public float height { get; private set; }
         public float width { get; private set; }
         public float x { get; private set; }
@@ -33,7 +33,8 @@ namespace TestEngine {
         private float accelerationPower = 1;
         private float speed = 200;
 
-        public Player(float x = 0, float y = 0) {
+        public Player(float x = 0, float y = 0, int lives = 3) {
+            this.lives = lives;
             this.x = x;
             this.y = y;
             angle = 0;
@@ -116,16 +117,27 @@ namespace TestEngine {
                 y += speed * dirY * acceleration * deltaTime;
             }
 
-
         }
 
         public void checkDeath() {
-            bool death = life <= 0;
+            bool death = lives <= 0;
             if (death) {
                 x = 0f;
                 y = 0f;
-                life = 100;
+                lives = 100;
             }
+        }
+
+        public void restartPosition(float x, float y, float angle = 0) {
+            this.x = x;
+            this.y = y;
+            this.angle = angle;
+            dirX = (float)Math.Cos((angle) * Math.PI / 180);
+            dirY = (float)Math.Sin((angle) * Math.PI / 180);
+        }
+
+        public void removeBullets() {
+            bulletsShot.Clear();
         }
 
         private void shootBullet() {

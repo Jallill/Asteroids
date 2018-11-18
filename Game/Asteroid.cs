@@ -88,7 +88,8 @@ namespace TestEngine {
             }
         }
 
-        public void checkCollision(List<Bullet> bullets) {
+        public int checkCollision(List<Bullet> bullets) {
+            int points = 0;
             foreach (Bullet bullet in bullets) {
                 var radius = this.r + bullet.r;
                 var deltaX = this.x - bullet.x;
@@ -96,14 +97,16 @@ namespace TestEngine {
                 if (Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2) <= Math.Pow(radius, 2)) {
                     destroyAsteroid = true;
                     bullet.bulletDisapear = true;
+                    points += 50;
                 }
             }
+            return points;
         }
 
         public void checkCollision(Player player) {
-            float delatX = x - Math.Max(player.x, Math.Min(x, player.x + player.width));
-            float delatY = y - Math.Max(player.y, Math.Min(y, player.y + player.height));
-            if (Math.Pow(delatX, 2) + Math.Pow(delatY, 2) < Math.Pow(r,2)) {
+            float deltaX = x - Math.Max(player.x, Math.Min(x, player.x + player.width));
+            float deltaY = y - Math.Max(player.y, Math.Min(y, player.y + player.height));
+            if (Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2) < Math.Pow(r,2)) {
                 Console.Write("Death");
             }
         }

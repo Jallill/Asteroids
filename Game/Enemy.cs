@@ -60,7 +60,7 @@ namespace TestEngine {
             bool collision = colX && colY;
 
             if (collision) {
-                player.life -= 1;
+                player.lives -= 1;
             }
         }
 
