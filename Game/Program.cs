@@ -8,7 +8,7 @@ namespace TestEngine {
 
 
         public enum States { MainMenu, MainGame, HighScore, Exit }
-
+        public static List<Int32> scores;
         public static States currentState = States.MainMenu;
 
         static bool loop = true;
@@ -18,6 +18,7 @@ namespace TestEngine {
 
         static MainGame mainGame;
         static MainMenu mainMenu;
+        static HighScore highScore;
 
         static void Main(string[] args) {
             int sleepTime;
@@ -47,7 +48,13 @@ namespace TestEngine {
 
             mainGame = new MainGame();
             mainMenu = new MainMenu();
-            
+            scores = Save.LoadSave();
+            if (scores == null) {
+                scores = Utils.loadDefaultScores();
+            }
+
+            highScore = new HighScore(scores);
+
             startDate = DateTime.Now;
         }
 
@@ -59,6 +66,9 @@ namespace TestEngine {
                     break;
                 case (States.MainGame):
                     mainGame.input(deltaTime);
+                    break;
+                case (States.HighScore):
+                    highScore.input();
                     break;
             }
 
@@ -72,18 +82,27 @@ namespace TestEngine {
                 case (States.MainGame):
                     mainGame.update(deltaTime);
                     break;
-
+                case (States.HighScore):
+                    highScore.update(scores);
+                    break;
+                case (States.Exit):
+                    Environment.Exit(1);
+                    break;
             }
 
         }
 
         static void render() {
+            Game.Clear(0, 0, 0);
             switch (currentState) {
                 case (States.MainMenu):
                     mainMenu.render();
                     break;
                 case (States.MainGame):
                     mainGame.render();
+                    break;
+                case (States.HighScore):
+                    highScore.render();
                     break;
             }
             Game.Show();

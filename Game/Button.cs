@@ -16,10 +16,11 @@ namespace TestEngine {
         private float timeBetween = 0.1f;
 
 
-        public Button(float x, float y, Text text) {
+        public Button(float x, float y, string text, float width, float height) {
             this.x = x;
             this.y = y;
-            this.text = text;
+
+            this.text = new Text(text, this.x, this.y, width, height);
         }
 
         public Button update(float deltaTime) {

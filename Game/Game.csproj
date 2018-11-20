@@ -59,11 +59,13 @@
     <Compile Include="Bullet.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="Enemy.cs" />
+    <Compile Include="HighScore.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="MainMenu.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Save.cs" />
     <Compile Include="Text.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
@@ -120,6 +122,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Texturas\Font\D.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Texturas\Font\dot.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Texturas\Font\E.png">

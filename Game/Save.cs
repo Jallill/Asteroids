@@ -7,32 +7,24 @@ using System.Threading.Tasks;
 
 namespace TestEngine {
     static class Save {
-        static byte[] GetBytes(Player player, Enemy enemy) {
+        static byte[] GetBytes(List<Int32> scores) {
             List<byte> bytes = new List<byte>();
 
-            //Esto convierte el float vida en su versión en bytes y lo
-            //guardo en la lista de bytes final
-            byte[] lifeBytes = BitConverter.GetBytes(player.life);
-            bytes.AddRange(lifeBytes);
+            byte[] quantityScoresBytes = BitConverter.GetBytes((Int32)scores.Count());
+            bytes.AddRange(quantityScoresBytes);
 
-            byte[] yPlayerBytes = BitConverter.GetBytes(player.y);
-            bytes.AddRange(yPlayerBytes);
+            byte[] scoreBytes;
 
-            byte[] xPlayerBytes = BitConverter.GetBytes(player.x);
-            bytes.AddRange(xPlayerBytes);
+            foreach(Int32 individualScore in scores) {
+                scoreBytes = BitConverter.GetBytes(individualScore);
+                bytes.AddRange(scoreBytes);
+            }
 
-            byte[] yEnemyBytes = BitConverter.GetBytes(enemy.y);
-            bytes.AddRange(yEnemyBytes);
-
-            byte[] xEnemyBytes = BitConverter.GetBytes(enemy.x);
-            bytes.AddRange(xEnemyBytes);
-            //Esto devuelve una copia de la lista en formato
-            //array
             return bytes.ToArray();
         }
 
-        public static void SaveBytesFile(Player jugador, Enemy enemigo) {
-            byte[] bytes = GetBytes(jugador,enemigo);
+        public static void SaveBytesFile(List<Int32> scores) {
+            byte[] bytes = GetBytes(scores);
 
             string filePath = Directory.GetCurrentDirectory() + "\\savefile.sav";
 
@@ -45,62 +37,36 @@ namespace TestEngine {
             
         }
 
-        public static void CheckInputQ(Player player, Enemy enemy) {
-            if (Game.GetKey(Keys.Q)) SaveBytesFile(player, enemy);
-        }
-        
-        static SaveData LoadBytesFile(byte[] bytes) {
-            //Arranco el indicador del byte actual en 0
+        static List<int> LoadBytesFile(byte[] bytes) {
+            
             int header = 0;
 
-            Player player = new Player();
-            Enemy enemy = new Enemy();
-            //Leo un float en la posicion del indicador
-            //Y avanzo el cabezal la cantidad de bytes que tien un float
+            Int32 quantityScores = BitConverter.ToInt32(bytes, header);
+            header += sizeof(Int32);
 
-            player.life = BitConverter.ToSingle(bytes, header);
-            header += sizeof(float);
+            List<Int32> scores = new List<Int32>();
 
-            player.y = BitConverter.ToSingle(bytes, header);
-            header += sizeof(float);
+            for (Int32 i = 0; i < quantityScores; i++) {
+                scores.Add(BitConverter.ToInt32(bytes, header));
+                header += sizeof(Int32);
+            }
 
-            player.x = BitConverter.ToSingle(bytes, header);
-            header += sizeof(float);
-
-            enemy.y = BitConverter.ToSingle(bytes, header);
-            header += sizeof(float);
-
-            enemy.x = BitConverter.ToSingle(bytes, header);
-
-            SaveData saveData = new SaveData(player, enemy);
-
-            return saveData;
+            return scores;
 
         }
 
 
 
-        public static SaveData LoadSave() {
+        public static List<Int32> LoadSave() {
             string filePath = Directory.GetCurrentDirectory() + "\\savefile.sav";
             if (File.Exists(filePath)) {
                 byte[] bytes = File.ReadAllBytes(filePath);
-                SaveData saveData = LoadBytesFile(bytes);
-                return saveData;
+                List<Int32> scores = LoadBytesFile(bytes);
+                return scores;
             }
             return null;
         }
 
-    }
-
-    class SaveData {
-
-        public SaveData(Player player, Enemy enemy) {
-            this.player = player;
-            this.enemy = enemy;
-        }
-
-        public Player player;
-        public Enemy enemy;
     }
 
 }

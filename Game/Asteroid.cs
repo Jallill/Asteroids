@@ -97,18 +97,24 @@ namespace TestEngine {
                 if (Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2) <= Math.Pow(radius, 2)) {
                     destroyAsteroid = true;
                     bullet.bulletDisapear = true;
-                    points += 50;
+                    points += 100;
                 }
             }
             return points;
         }
 
-        public void checkCollision(Player player) {
+        public int checkCollision(Player player) {
+            int points = 0;
             float deltaX = x - Math.Max(player.x, Math.Min(x, player.x + player.width));
             float deltaY = y - Math.Max(player.y, Math.Min(y, player.y + player.height));
             if (Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2) < Math.Pow(r,2)) {
-                Console.Write("Death");
+                destroyAsteroid = true;
+                points += 100;
+                player.lives--;
+                player.restartPosition(400, 300);
+                player.startInvulneraibility(3);
             }
+            return points;
         }
 
     }

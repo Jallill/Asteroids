@@ -12,32 +12,35 @@ namespace TestEngine {
         public float y { get; private set; }
         public float height { get; private set; }
         public float width { get; private set; }
-        
-        private float fontHeight = 54;
-        private float fontWidth = 40;
-        private float scale;
 
-        public Text(string text, float x, float y, float height = 0, float width = 0) {
+        private float defaultFontWidth = 40;
+        private float defaultfontHeight = 54;
+        private float scaleX;
+        private float scaleY;
+
+        public Text(string text, float x, float y,  float width = 40, float height = 54) {
             charText = text.ToArray();
             this.x = x;
-            this.y = y;
+            
             this.height = height;
             this.width = width;
 
-            float aux = (float)charText.Count() / 5;
-            if (aux < 1) aux = 1; 
-            scale = 1 / aux;
+            scaleX =  width / defaultFontWidth;
+            scaleY =  height / defaultfontHeight;
 
+            this.y = y;
             loadTextures();
         }
 
         void loadTextures() {
             charTextures = new List<Texture>();
             foreach(char c in charText) {
-                if (!c.Equals(' ')) {
-                    charTextures.Add(Game.GetTexture("Texturas/Font/" + c + ".png"));
-                } else {
+                if (c.Equals(' ')) {
                     charTextures.Add(Game.GetTexture("Texturas/Font/space.png"));
+                } else if (c.Equals('.')) {
+                    charTextures.Add(Game.GetTexture("Texturas/Font/dot.png"));
+                } else {
+                    charTextures.Add(Game.GetTexture("Texturas/Font/" + c + ".png"));
                 }
             }
         }
@@ -50,8 +53,8 @@ namespace TestEngine {
         public void drawText() {
             float xOffSet = 0;
             foreach(Texture texture in charTextures) {
-                Game.Draw(texture, x + xOffSet, y, scale, scale, 0, fontWidth/2, fontHeight/2);
-                xOffSet += fontWidth - fontWidth  * (1 - scale);
+                Game.Draw(texture, x + xOffSet, y, scaleX, scaleY, 0, defaultFontWidth/2, defaultfontHeight / 2);
+                xOffSet += defaultFontWidth - defaultFontWidth * (1 - scaleX);
             }
         }
 

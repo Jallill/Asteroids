@@ -18,6 +18,9 @@ namespace TestEngine {
         public Texture tIdle { get; private set; }
         public float pivotX { get; private set; }
         public float pivotY { get; private set; }
+        public bool invulnerability { get; private set; }
+        public float invulnerabilityTime { get; private set; }
+
         public bool dead = false;
         enum Direction { Left = -1, None = 0, Right = 1}
 
@@ -117,15 +120,12 @@ namespace TestEngine {
                 y += speed * dirY * acceleration * deltaTime;
             }
 
-        }
-
-        public void checkDeath() {
-            bool death = lives <= 0;
-            if (death) {
-                x = 0f;
-                y = 0f;
-                lives = 100;
+            if(invulnerabilityTime > 0) {
+                invulnerabilityTime -= deltaTime;
             }
+
+            invulnerability = invulnerabilityTime > 0;
+
         }
 
         public void restartPosition(float x, float y, float angle = 0) {
@@ -140,12 +140,23 @@ namespace TestEngine {
             bulletsShot.Clear();
         }
 
+        public void startInvulneraibility(float time) {
+            invulnerability = true;
+            invulnerabilityTime = time;
+        }
+
+        public void clearBullets() {
+            bulletsShot.Clear();
+        }
+
         private void shootBullet() {
             if (bulletsShot.Count < maxBullets) {
                 Bullet bullet = new Bullet(this.x, this.y, angle, pivotX, pivotY, 10);
                 bulletsShot.Add(bullet);
             }
         }
+
+        
 
     }
 }

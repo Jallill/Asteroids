@@ -23,11 +23,11 @@ namespace TestEngine {
         Arrow arrow;
 
         public MainMenu() {
-            mainMenuTitle = new Text("ASTEROIDS", 260, 100);
+            mainMenuTitle = new Text("ASTEROIDS", 245, 100);
 
-            buttonStartGame = new Button(260,200,new Text("START GAME", 260, 200));
-            buttonHighScores = new Button(260, 260, new Text("HIGH SCORES", 260, 260));
-            buttonExit = new Button(260, 320, new Text("EXIT", 260, 320));
+            buttonStartGame = new Button(260, 300, "START GAME", 30, 35);
+            buttonHighScores = new Button(260, 360, "HIGH SCORES", 30, 35);
+            buttonExit = new Button(260, 420, "EXIT", 30, 35);
 
             buttons.Add(buttonStartGame);
             buttons.Add(buttonHighScores);
@@ -39,7 +39,7 @@ namespace TestEngine {
 
             currentButton = buttonStartGame;
 
-            arrow = new Arrow();
+            arrow = new Arrow(100);
             arrow.update(currentButton.x, currentButton.y);
         }
 
@@ -66,22 +66,23 @@ namespace TestEngine {
 
 
         public void render() {
-            Game.Clear(0, 0, 0);
             mainMenuTitle.drawText();
 
-            foreach(Button button in buttons) {
+            foreach (Button button in buttons) {
                 button.text.drawText();
             }
 
-            Game.Draw("Texturas/SpaceShip.png", arrow.x, arrow.y,1,1,0,25,16);
+            Game.Draw("Texturas/SpaceShip.png", arrow.x, arrow.y, 1, 1, 0, arrow.pivotX, arrow.pivotY);
         }
 
         void enter() {
             if (currentButton == buttonStartGame) {
                 Program.changeState(Program.States.MainGame);
-            } else if (currentButton == buttonHighScores) {
+            }
+            else if (currentButton == buttonHighScores) {
                 Program.changeState(Program.States.HighScore);
-            } else if (currentButton == buttonExit) {
+            }
+            else if (currentButton == buttonExit) {
                 Program.changeState(Program.States.Exit);
             }
         }
