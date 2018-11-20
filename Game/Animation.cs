@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TestEngine {
-    class Animacion 
+    class Animation 
     {
         public List<Texture> frames = new List<Texture>();
         public bool loop = true;

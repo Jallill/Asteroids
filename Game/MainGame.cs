@@ -8,7 +8,6 @@ namespace TestEngine {
     class MainGame {
 
         bool pause = true;
-        bool nextLevel = false;
         int gameLevel;
 
 
@@ -27,7 +26,7 @@ namespace TestEngine {
         int pointCount;
 
         public MainGame() {
-            restart();
+                restart();
         }
 
         public void input(float deltaTime) {

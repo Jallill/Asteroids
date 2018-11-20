@@ -31,12 +31,14 @@ namespace TestEngine {
             loadTextures();
         }
 
-
-
         void loadTextures() {
             charTextures = new List<Texture>();
             foreach(char c in charText) {
-                charTextures.Add(Game.GetTexture("Texturas/Font/" + c + ".png"));
+                if (!c.Equals(' ')) {
+                    charTextures.Add(Game.GetTexture("Texturas/Font/" + c + ".png"));
+                } else {
+                    charTextures.Add(Game.GetTexture("Texturas/Font/space.png"));
+                }
             }
         }
 

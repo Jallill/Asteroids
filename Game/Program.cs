@@ -7,9 +7,9 @@ namespace TestEngine {
         const int MS_PER_FRAME = 1000 / 60;
 
 
-        enum States { MainGame }
+        public enum States { MainMenu, MainGame, HighScore, Exit }
 
-        static States state = States.MainGame;
+        public static States currentState = States.MainMenu;
 
         static bool loop = true;
         static float deltaTime;
@@ -17,6 +17,7 @@ namespace TestEngine {
         static DateTime startDate;
 
         static MainGame mainGame;
+        static MainMenu mainMenu;
 
         static void Main(string[] args) {
             int sleepTime;
@@ -45,13 +46,17 @@ namespace TestEngine {
             Game.Initialize("Parcial",800,600,false);
 
             mainGame = new MainGame();
-
+            mainMenu = new MainMenu();
+            
             startDate = DateTime.Now;
         }
 
 
         static void input() {
-            switch (state) {
+            switch (currentState) {
+                case (States.MainMenu):
+                    mainMenu.input(deltaTime);
+                    break;
                 case (States.MainGame):
                     mainGame.input(deltaTime);
                     break;
@@ -60,25 +65,27 @@ namespace TestEngine {
         }
         
         static void update() {
-            switch (state) {
+            switch (currentState) {
+                case (States.MainMenu):
+                    mainMenu.update(deltaTime);
+                    break;
                 case (States.MainGame):
                     mainGame.update(deltaTime);
                     break;
+
             }
 
         }
 
         static void render() {
-            switch (state) {
+            switch (currentState) {
+                case (States.MainMenu):
+                    mainMenu.render();
+                    break;
                 case (States.MainGame):
                     mainGame.render();
                     break;
             }
-
-            //testing
-            //drawBoxcollider(P1.x, P1.y, P1.width, P1.height);
-            //drawBoxcollider(enemy.x, enemy.y, enemy.width,enemy.height);
-
             Game.Show();
         }
 
@@ -93,20 +100,8 @@ namespace TestEngine {
             lastFrameTime = DateTime.Now;
         }
 
-
-
-        public static void drawBoxcollider(float x, float y, float width, float height) {
-            
-            for (float i = (x); i < width + x; i++) {
-                Game.Draw("pixel.png", i , y);
-                Game.Draw("pixel.png", i , y + height);
-            }
-            for(float j = (y + height); j > y; j--) {
-                Game.Draw("pixel.png", x, j);
-                Game.Draw("pixel.png", x + width, j);
-            }
+        public static void changeState(States state) {
+            currentState = state;
         }
-
-
     }
 }
