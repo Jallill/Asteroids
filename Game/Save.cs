@@ -7,24 +7,29 @@ using System.Threading.Tasks;
 
 namespace TestEngine {
     static class Save {
-        static byte[] GetBytes(List<Int32> scores) {
+        static byte[] GetBytes(Player player, Int32 score, Int32 gameLevel) {
             List<byte> bytes = new List<byte>();
 
-            byte[] quantityScoresBytes = BitConverter.GetBytes((Int32)scores.Count());
-            bytes.AddRange(quantityScoresBytes);
+            byte[] scoreBytes = BitConverter.GetBytes(score);
+            bytes.AddRange(scoreBytes);
 
-            byte[] scoreBytes;
+            byte[] gameLevelBytes = BitConverter.GetBytes(gameLevel);
+            bytes.AddRange(gameLevelBytes);
 
-            foreach(Int32 individualScore in scores) {
-                scoreBytes = BitConverter.GetBytes(individualScore);
-                bytes.AddRange(scoreBytes);
-            }
+            byte[] xBytes = BitConverter.GetBytes(player.x);
+            bytes.AddRange(xBytes);
+
+            byte[] yBytes = BitConverter.GetBytes(player.y);
+            bytes.AddRange(yBytes);
+
+            byte[] livesBytes = BitConverter.GetBytes(player.lives);
+            bytes.AddRange(livesBytes);
 
             return bytes.ToArray();
         }
 
-        public static void SaveBytesFile(List<Int32> scores) {
-            byte[] bytes = GetBytes(scores);
+        public static void SaveBytesFile(Player player, Int32 score, Int32 gameLevel) {
+            byte[] bytes = GetBytes(player, score, gameLevel);
 
             string filePath = Directory.GetCurrentDirectory() + "\\savefile.sav";
 
@@ -37,34 +42,53 @@ namespace TestEngine {
             
         }
 
-        static List<int> LoadBytesFile(byte[] bytes) {
+        static SaveData LoadBytesFile(byte[] bytes) {
             
             int header = 0;
+            
 
-            Int32 quantityScores = BitConverter.ToInt32(bytes, header);
+            Int32 score = BitConverter.ToInt32(bytes, header);
             header += sizeof(Int32);
 
-            List<Int32> scores = new List<Int32>();
+            Int32 gameLevel = BitConverter.ToInt32(bytes, header);
+            header += sizeof(Int32);
 
-            for (Int32 i = 0; i < quantityScores; i++) {
-                scores.Add(BitConverter.ToInt32(bytes, header));
-                header += sizeof(Int32);
-            }
+            float x = BitConverter.ToSingle(bytes, header);
+            header += sizeof(float);
 
-            return scores;
+            float y = BitConverter.ToSingle(bytes, header);
+            header += sizeof(float);
+
+            int lives = BitConverter.ToInt32(bytes, header);
+            header += sizeof(Int32);
+
+            Player player = new Player(x, y, lives);
+
+            return new SaveData(player, score, gameLevel);
 
         }
 
-
-
-        public static List<Int32> LoadSave() {
+        public static SaveData LoadSave() {
             string filePath = Directory.GetCurrentDirectory() + "\\savefile.sav";
             if (File.Exists(filePath)) {
                 byte[] bytes = File.ReadAllBytes(filePath);
-                List<Int32> scores = LoadBytesFile(bytes);
-                return scores;
+                SaveData saveData = LoadBytesFile(bytes);
+                return saveData;
             }
             return null;
+        }
+
+        public class SaveData {
+            public Player player { get; private set; }
+            public int score { get; private set; }
+            public int gameLevel { get; private set; }
+
+            public SaveData(Player player, int score, int gameLevel) {
+                this.player = player;
+                this.score = score;
+                this.gameLevel = gameLevel;
+            }
+
         }
 
     }

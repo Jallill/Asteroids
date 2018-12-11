@@ -12,6 +12,7 @@ namespace TestEngine {
         Text mainMenuTitle;
 
         Button buttonStartGame;
+        Button buttonLoadGame;
         Button buttonHighScores;
         Button buttonExit;
         Button currentButton;
@@ -26,15 +27,18 @@ namespace TestEngine {
             mainMenuTitle = new Text("ASTEROIDS", 245, 100);
 
             buttonStartGame = new Button(260, 300, "START GAME", 30, 35);
-            buttonHighScores = new Button(260, 360, "HIGH SCORES", 30, 35);
-            buttonExit = new Button(260, 420, "EXIT", 30, 35);
+            buttonLoadGame = new Button(260, 360, "LOAD GAME", 30, 35);
+            buttonHighScores = new Button(260, 420, "HIGH SCORES", 30, 35);
+            buttonExit = new Button(260, 480, "EXIT", 30, 35);
 
             buttons.Add(buttonStartGame);
+            buttons.Add(buttonLoadGame);
             buttons.Add(buttonHighScores);
             buttons.Add(buttonExit);
 
-            buttonStartGame.setButtons(null, buttonHighScores);
-            buttonHighScores.setButtons(buttonStartGame, buttonExit);
+            buttonStartGame.setButtons(null, buttonLoadGame);
+            buttonLoadGame.setButtons(buttonStartGame, buttonHighScores);
+            buttonHighScores.setButtons(buttonLoadGame, buttonExit);
             buttonExit.setButtons(buttonHighScores, null);
 
             currentButton = buttonStartGame;
@@ -78,11 +82,11 @@ namespace TestEngine {
         void enter() {
             if (currentButton == buttonStartGame) {
                 Program.changeState(Program.States.MainGame);
-            }
-            else if (currentButton == buttonHighScores) {
+            } else if (currentButton == buttonLoadGame) {
+                Program.loadGame();
+            } else if (currentButton == buttonHighScores) {
                 Program.changeState(Program.States.HighScore);
-            }
-            else if (currentButton == buttonExit) {
+            } else if (currentButton == buttonExit) {
                 Program.changeState(Program.States.Exit);
             }
         }

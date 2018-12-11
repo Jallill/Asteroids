@@ -8,7 +8,7 @@ namespace TestEngine {
 
 
         public enum States { MainMenu, MainGame, HighScore, Exit }
-        public static List<Int32> scores;
+        public static List<Int32> scores = new List<Int32>();
         public static States currentState = States.MainMenu;
 
         static bool loop = true;
@@ -34,23 +34,23 @@ namespace TestEngine {
                 render();
 
                 sleepTime = Convert.ToInt32(start + MS_PER_FRAME - GetCurrentTime());
-                
+
                 if (sleepTime > 0) {
                     System.Threading.Thread.Sleep(sleepTime);
                 }
 
-                
+
             }
         }
 
         static void setUp() {
-            Game.Initialize("Parcial",800,600,false);
+            Game.Initialize("Final", 800, 600, false);
 
             mainGame = new MainGame();
             mainMenu = new MainMenu();
-            scores = Save.LoadSave();
-            if (scores == null) {
-                scores = Utils.loadDefaultScores();
+
+            for(int i = 0; i <= 10; i++) {
+                scores.Add(i * 1000);
             }
 
             highScore = new HighScore(scores);
@@ -73,7 +73,7 @@ namespace TestEngine {
             }
 
         }
-        
+
         static void update() {
             switch (currentState) {
                 case (States.MainMenu):
@@ -112,7 +112,7 @@ namespace TestEngine {
             TimeSpan diffStart = DateTime.Now.Subtract(startDate);
             return (float)(diffStart.TotalMilliseconds);
         }
-        
+
         static void calculateDeltaTime() {
             TimeSpan deltaSpan = DateTime.Now - lastFrameTime;
             deltaTime = (float)deltaSpan.TotalSeconds;
@@ -121,6 +121,14 @@ namespace TestEngine {
 
         public static void changeState(States state) {
             currentState = state;
+        }
+
+        public static void loadGame() {
+            Save.SaveData saveData = Save.LoadSave();
+            if(saveData != null) {
+                mainGame.restartFromSave(saveData.player, saveData.score, saveData.gameLevel);
+            }
+            changeState(States.MainGame);
         }
     }
 }

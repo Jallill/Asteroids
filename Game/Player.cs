@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TestEngine {
      class Player {
 
-        public float lives;
+        public int lives;
         public float height { get; private set; }
         public float width { get; private set; }
         public float x { get; private set; }

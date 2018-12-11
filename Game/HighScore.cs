@@ -23,7 +23,7 @@ namespace TestEngine {
             if (newScores != scores) {
                 scores = newScores;
                 loadScoresText();
-                Save.SaveBytesFile(scores);
+                //Save.SaveBytesFile(scores);
             }
         }
 
@@ -35,7 +35,7 @@ namespace TestEngine {
 
         private void loadScoresText() {
             scoresText = new List<Text>();
-            int i = 1;
+            int i = 10;
             float x = 260;
             float y = 30;
             foreach (Int32 score in this.scores) {
@@ -45,7 +45,7 @@ namespace TestEngine {
                 Text text = new Text(i.ToString() + ". " + Utils.Truncate("00000000" + score.ToString(), 8),x,y,30,35);
                 scoresText.Add(text);
                 y += 60;
-                i++;
+                i--;
             }
             
         }

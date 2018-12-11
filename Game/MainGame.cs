@@ -26,7 +26,7 @@ namespace TestEngine {
         float countDown;
 
         Text points;
-        int pointCount;
+        int score;
 
         public MainGame() {
             restart();
@@ -34,6 +34,7 @@ namespace TestEngine {
 
         public void input(float deltaTime) {
             if (!pause && !gameOver) {
+                if (Game.GetKey(Keys.Q)) Save.SaveBytesFile(player, score, gameLevel);
                 player.inputKey(deltaTime);
             }
         }
@@ -53,11 +54,11 @@ namespace TestEngine {
                 foreach (Asteroid asteroid in asteroids) {
                     asteroid.update(deltaTime);
                     if (!player.invulnerability) {
-                        pointCount += asteroid.checkCollision(player);
+                        score += asteroid.checkCollision(player);
                     }
                     if (player.bulletsShot.Count > 0) {
-                        pointCount += asteroid.checkCollision(player.bulletsShot);
-                        points.changeText(Utils.Truncate("00000000" + pointCount.ToString(), 8));
+                        score += asteroid.checkCollision(player.bulletsShot);
+                        points.changeText(Utils.Truncate("00000000" + score.ToString(), 8));
                     }
 
                     if (asteroid.destroyAsteroid == true) {
@@ -91,7 +92,7 @@ namespace TestEngine {
                 if (gameOver) {
                     gameOverTime -= deltaTime;
                     if (gameOverTime < 0) {
-                        updateScores(pointCount);
+                        updateScores(score);
                         Program.changeState(Program.States.MainMenu);
                     }
                 }
@@ -129,6 +130,19 @@ namespace TestEngine {
             countDownText = new Text("3", 400, 200);
             points = new Text("00000000", 600, 30, 20, 27);
             gameLevel = 1;
+            setUpAsteroids(gameLevel);
+        }
+
+        public void restartFromSave(Player player, int score, int gameLevel) {
+            this.player = new Player(player.x, player.y, player.lives);
+            this.score = score;
+            this.gameLevel = gameLevel;
+            player.startInvulneraibility(3);
+            points = new Text(Utils.Truncate("00000000" + score.ToString(), 8), 600, 30, 20, 27);
+            pause = true;
+            countDown = 3;
+            countDownText = new Text("3", 400, 200);
+            asteroids = new List<Asteroid>();
             setUpAsteroids(gameLevel);
         }
 
