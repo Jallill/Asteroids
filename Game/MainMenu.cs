@@ -14,6 +14,7 @@ namespace TestEngine {
         Button buttonStartGame;
         Button buttonHighScores;
         Button buttonExit;
+        Button buttonLoadGame;
         Button currentButton;
 
         bool canPressSpace = true;
@@ -26,15 +27,18 @@ namespace TestEngine {
             mainMenuTitle = new Text("ASTEROIDS", 260, 100);
 
             buttonStartGame = new Button(260,200,new Text("START GAME", 260, 200));
-            buttonHighScores = new Button(260, 260, new Text("HIGH SCORES", 260, 260));
-            buttonExit = new Button(260, 320, new Text("EXIT", 260, 320));
+            buttonLoadGame = new Button(260, 260, new Text("LOAD GAME", 260, 260));
+            buttonHighScores = new Button(260, 320, new Text("HIGH SCORES", 260, 320));
+            buttonExit = new Button(260, 380, new Text("EXIT", 260, 380));
 
             buttons.Add(buttonStartGame);
+            buttons.Add(buttonLoadGame);
             buttons.Add(buttonHighScores);
             buttons.Add(buttonExit);
 
             buttonStartGame.setButtons(null, buttonHighScores);
-            buttonHighScores.setButtons(buttonStartGame, buttonExit);
+            buttonLoadGame.setButtons(buttonStartGame, buttonHighScores);
+            buttonHighScores.setButtons(buttonLoadGame, buttonExit);
             buttonExit.setButtons(buttonHighScores, null);
 
             currentButton = buttonStartGame;
@@ -79,6 +83,8 @@ namespace TestEngine {
         void enter() {
             if (currentButton == buttonStartGame) {
                 Program.changeState(Program.States.MainGame);
+            } else if(currentButton == buttonLoadGame) {
+                Program.loadGame();
             } else if (currentButton == buttonHighScores) {
                 Program.changeState(Program.States.HighScore);
             } else if (currentButton == buttonExit) {

@@ -100,6 +100,10 @@ namespace TestEngine {
             lastFrameTime = DateTime.Now;
         }
 
+        public static void loadGame() {
+
+        }
+
         public static void changeState(States state) {
             currentState = state;
         }
